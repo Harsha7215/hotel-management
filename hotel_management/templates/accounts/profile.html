@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+            <h2>{{ user.get_full_name|default:user.username }}</h2>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+            <p><i class="fas fa-user-circle"></i> @{{ user.username }}</p>
+        </div>
+    </div>
+
+    <!-- Profile Form -->
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <h3 class="mb-2">Personal Information</h3>
+
+        <!-- Grid Row -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.phone_number.id_for_label }}">
+                    <i class="fas fa-phone"></i> Phone Number
+                </label>
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                    <small class="text-danger">
+                        {{ form.phone_number.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.date_of_birth.id_for_label }}">
+                    <i class="fas fa-birthday-cake"></i> Date of Birth
+                </label>
+                {{ form.date_of_birth }}
+                {% if form.date_of_birth.errors %}
+                    <small class="text-danger">
+                        {{ form.date_of_birth.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+            <label for="{{ form.address.id_for_label }}">
+                <i class="fas fa-map-marker-alt"></i> Address
+            </label>
+            {{ form.address }}
+            {% if form.address.errors %}
+                <small class="text-danger">
+                    {{ form.address.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- City & Country -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.city.id_for_label }}">
+                    <i class="fas fa-city"></i> City
+                </label>
+                {{ form.city }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.country.id_for_label }}">
+                    <i class="fas fa-globe"></i> Country
+                </label>
+                {{ form.country }}
+            </div>
+        </div>
+
+        <!-- ID Proof -->
+        <div class="form-group">
+            <label for="{{ form.id_proof.id_for_label }}">
+                <i class="fas fa-id-card"></i> ID Proof (Optional)
+            </label>
+
+            {% if user.userprofile.id_proof %}
+                <p class="mb-1">
+                    Current file:
+                    <a href="{{ user.userprofile.id_proof.url }}" target="_blank">
+                        View ID Proof
+                    </a>
+                </p>
+            {% endif %}
+
+            {{ form.id_proof }}
+        </div>
+
+        <!-- Submit -->
+        <div class="form-actions mt-3">
+            <button type="submit" class="btn">
+                <i class="fas fa-save"></i> Update Profile
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

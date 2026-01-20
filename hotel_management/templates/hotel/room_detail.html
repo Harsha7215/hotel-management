@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}{{ room.room_type.name }} | Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="room-detail-container">
+
+    <!-- Room Image -->
+    {% if room.room_type.image %}
+        <img src="{{ room.room_type.image.url }}"
+             alt="{{ room.room_type.name }}"
+             class="room-image">
+    {% else %}
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80"
+             alt="{{ room.room_type.name }}"
+             class="room-image">
+    {% endif %}
+
+    <!-- Room Info -->
+    <div class="room-info">
+
+        <h1 class="room-title">
+            {{ room.room_type.name }} – Room {{ room.room_number }}
+        </h1>
+
+        <p class="room-price">
+            ${{ room.room_type.price_per_night }} <span>/ night</span>
+        </p>
+
+        <div class="room-description">
+            {{ room.room_type.description }}
+        </div>
+
+        <!-- Amenities -->
+        <div class="amenities">
+            <h3><i class="fas fa-star"></i> Amenities</h3>
+            {% for amenity in room.room_type.amenities.split|slice:":10" %}
+                <span class="amenity-tag">
+                    <i class="fas fa-check"></i> {{ amenity }}
+                </span>
+            {% endfor %}
+        </div>
+
+        <!-- Room Meta -->
+        <div class="room-meta mt-2">
+            <div class="meta-card">
+                <p>
+                    <strong><i class="fas fa-user-friends"></i> Capacity:</strong>
+                    {{ room.room_type.capacity }} guests
+                </p>
+            </div>
+
+            <div class="meta-card">
+                <p>
+                    <strong><i class="fas fa-building"></i> Floor:</strong>
+                    {{ room.floor_number }}
+                </p>
+            </div>
+
+            <div class="meta-card">
+                <p>
+                    <strong><i class="fas fa-door-closed"></i> Status:</strong>
+                    <span class="room-status {{ room.status }}">
+                        {{ room.status|title }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        {% if user.is_authenticated and room.status == "available" %}
+        <div class="text-center mt-3">
+            <a href="{% url 'book_room' room.id %}"
+               class="btn btn-cta">
+                <i class="fas fa-calendar-check"></i> Book This Room
+            </a>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div class="text-center mt-3">
+            <p>
+                Please <a href="{% url 'login' %}">login</a> to book this room.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if avg_rating %}
+<p>
+     Average Rating:
+    <strong>{{ avg_rating|floatformat:1 }}/5</strong>
+</p>
+{% else %}
+<p>No ratings yet</p>
+{% endif %}
+
+<hr>
+
+<h3>Guest Reviews</h3>
+
+{% for review in reviews %}
+<div class="booking-card">
+    <p><strong>{{ review.user.username }}</strong></p>
+    <p>Rating: {{ review.rating }} ⭐</p>
+    <p>{{ review.comment }}</p>
+</div>
+{% empty %}
+<p>No reviews yet.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'add_review' room.id %}" class="btn mt-2">
+    Add Review
+</a>
+{% endif %}
+
+
+
+    </div>
+</div>
+{% endblock %}
+

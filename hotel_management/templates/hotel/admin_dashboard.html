@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Hotel Royal Stay{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Admin Dashboard</h1>
+
+<div class="card-grid">
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Total Bookings</h3>
+            <p class="card-price">{{ total_bookings }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Confirmed Bookings</h3>
+            <p class="card-price">{{ confirmed_bookings }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Cancelled Bookings</h3>
+            <p class="card-price">{{ cancelled_bookings }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Total Revenue</h3>
+            <p class="card-price">₹{{ total_revenue }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body text-center">
+            <h3>Occupied Rooms</h3>
+            <p class="card-price">{{ occupied_rooms }}</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

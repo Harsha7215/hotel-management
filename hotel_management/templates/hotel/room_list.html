@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Available Rooms | Hotel Royal Stay{% endblock %}
+
+{% block content %}
+<div class="rooms-page">
+
+    <h1 class="page-title">Available Rooms</h1>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <h2>Search Rooms</h2>
+
+        <form method="get" action="{% url 'room_list' %}" class="search-form">
+
+            <div class="form-group">
+                {{ form.check_in.label_tag }}
+                {{ form.check_in }}
+                {% if form.check_in.errors %}
+                    <small class="text-danger">
+                        {{ form.check_in.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.check_out.label_tag }}
+                {{ form.check_out }}
+                {% if form.check_out.errors %}
+                    <small class="text-danger">
+                        {{ form.check_out.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.guests.label_tag }}
+                {{ form.guests }}
+                {% if form.guests.errors %}
+                    <small class="text-danger">
+                        {{ form.guests.errors|striptags }}
+                    </small>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Non-field errors -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {{ form.non_field_errors|striptags }}
+        </div>
+    {% endif %}
+
+    <!-- Rooms Section -->
+    <div class="rooms-container">
+        <h2>Available Rooms ({{ rooms.count }})</h2>
+
+        {% if rooms %}
+        <div class="rooms-grid">
+
+            {% for room in rooms %}
+            <div class="room-card">
+
+                <!-- ✅ SAFE IMAGE HANDLING -->
+                <img 
+                    src="{{ room.room_type.image_url }}" 
+                    alt="{{ room.room_type.name }}"
+                    class="room-image"
+                >
+
+                <div class="room-info">
+
+                    <h3>{{ room.room_type.name }}</h3>
+
+                    <p class="room-meta">
+                        Room {{ room.room_number }} · Floor {{ room.floor_number }}
+                    </p>
+
+                    <p class="room-meta">
+                        Capacity: {{ room.room_type.capacity }} guests
+                    </p>
+
+                    <p class="room-price">
+                        ₹{{ room.room_type.price_per_night }} / night
+                    </p>
+
+                    <p class="room-amenities">
+                        {{ room.room_type.amenities|truncatewords:20 }}
+                    </p>
+
+                    <div class="room-actions">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'book_room' room.id %}" class="btn btn-primary">
+                                Book Now
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={% url 'book_room' room.id %}" class="btn btn-primary">
+                                Login to Book
+                            </a>
+                        {% endif %}
+
+                        <a href="{% url 'room_detail' room.id %}" class="btn btn-secondary">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% else %}
+        <div class="no-rooms">
+            <p>No rooms available. Try different dates or guests.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Hotel Paradise{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to Hotel Royal Stay</h1>
+        <p>Experience luxury, comfort, and exceptional service.</p>
+        <a href="{% url 'room_list' %}" class="btn">Find Your Room</a>
+    </div>
+</section>
+
+
+
+<!-- Features -->
+<section class="features">
+    <div class="feature">
+        <div class="feature-icon">
+            <i class="fas fa-concierge-bell"></i>
+        </div>
+        <h3>Premium Service</h3>
+        <p>24/7 concierge service to attend to all your needs during your stay.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">
+            <i class="fas fa-wifi"></i>
+        </div>
+        <h3>Free WiFi</h3>
+        <p>High-speed internet access throughout the hotel premises.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">
+            <i class="fas fa-utensils"></i>
+        </div>
+        <h3>Restaurant & Bar</h3>
+        <p>Enjoy gourmet dining and refreshing beverages at our in-house restaurant.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">
+            <i class="fas fa-swimming-pool"></i>
+        </div>
+        <h3>Swimming Pool</h3>
+        <p>Relax and unwind in our temperature-controlled swimming pool.</p>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section text-center mt-3">
+    <h2 class="page-title">Ready to Book Your Stay?</h2>
+    <p class="page-subtitle">
+        Check availability and book your perfect room today!
+    </p>
+    <a href="{% url 'room_list' %}" class="btn btn-cta">
+        <i class="fas fa-calendar-check"></i> Book Now
+    </a>
+</section>
+
+{% endblock %}

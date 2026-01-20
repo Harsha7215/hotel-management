@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Details | Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="booking-detail-container">
+
+    <h1 class="page-title">Booking Details #{{ booking.id }}</h1>
+
+    <!-- Booking Header -->
+    <div class="booking-summary">
+        <div class="d-flex justify-between align-center">
+            <div>
+                <h3>Booking Information</h3>
+                <span class="booking-status status-{{ booking.status }}">
+                    {{ booking.status|title }}
+                </span>
+            </div>
+            <p>
+                <strong>Booking Date:</strong>
+                {{ booking.created_at|date:"M d, Y H:i" }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Room Details -->
+    <section class="detail-section">
+        <h3><i class="fas fa-hotel"></i> Room Details</h3>
+        <div class="detail-grid">
+            <div>
+                <p><strong>Room Type:</strong> {{ booking.room.room_type.name }}</p>
+                <p><strong>Room Number:</strong> {{ booking.room.room_number }}</p>
+                <p><strong>Floor:</strong> {{ booking.room.floor_number }}</p>
+            </div>
+            <div>
+                <p><strong>Check-in:</strong> {{ booking.check_in_date }}</p>
+                <p><strong>Check-out:</strong> {{ booking.check_out_date }}</p>
+                <p><strong>Nights:</strong> {{ booking.nights }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guest Details -->
+    <section class="detail-section">
+        <h3><i class="fas fa-user"></i> Guest Information</h3>
+        <div class="detail-grid">
+            <div>
+                <p><strong>Name:</strong> {{ booking.guest.get_full_name }}</p>
+                <p><strong>Email:</strong> {{ booking.guest.email }}</p>
+                <p><strong>Guests:</strong> {{ booking.number_of_guests }}</p>
+            </div>
+            {% if booking.special_requests %}
+            <div>
+                <p><strong>Special Requests:</strong></p>
+                <p>{{ booking.special_requests }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Payment Details -->
+    {% if payment %}
+    <section class="detail-section payment-box">
+        <h3><i class="fas fa-credit-card"></i> Payment Information</h3>
+        <div class="detail-grid">
+            <div>
+                <p>
+                    <strong>Status:</strong>
+                    <span class="payment-status {{ payment.status }}">
+                        {{ payment.status|title }}
+                    </span>
+                </p>
+                <p><strong>Method:</strong> {{ payment.get_payment_method_display }}</p>
+            </div>
+            <div>
+                <p class="price-highlight">
+                    Amount Paid: ${{ payment.amount }}
+                </p>
+                <p>
+                    <strong>Payment Date:</strong>
+                    {{ payment.payment_date|date:"M d, Y H:i" }}
+                </p>
+                {% if payment.transaction_id %}
+                <p><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Price Summary -->
+    <section class="detail-section">
+        <h3><i class="fas fa-receipt"></i> Price Summary</h3>
+        <div class="price-summary">
+            <div class="price-row">
+                <span>Room rate / night</span>
+                <span>${{ booking.room.room_type.price_per_night }}</span>
+            </div>
+            <div class="price-row">
+                <span>Number of nights</span>
+                <span>{{ booking.nights }}</span>
+            </div>
+            <hr>
+            <div class="price-total">
+                <span>Total Price</span>
+                <span>${{ booking.total_price }}</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="form-actions mt-3">
+        <a href="{% url 'my_bookings' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+
+        {% if booking.status == "pending" or booking.status == "confirmed" %}
+        <a href="{% url 'cancel_booking' booking.id %}"
+           class="btn btn-danger"
+           onclick="return confirm('Cancel this booking?')">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+        {% endif %}
+
+        {% if not payment and booking.status != "cancelled" %}
+        <a href="{% url 'payment' booking.id %}" class="btn">
+            <i class="fas fa-credit-card"></i> Pay Now
+        </a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Hotel Royal Stay{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Font Awesome (icons used across templates) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <nav class="navbar">
+      <a href="{% url 'home' %}" class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="Hotel Royal Stay Logo" class="site-logo">
+        <span>Hotel Royal Stay</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'room_list' %}">Rooms</a></li>
+
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          {% if user.is_staff %}
+            <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+          {% endif %}
+          <li class="user-nav">
+            <span class="welcome-text">Welcome, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn">Logout</a>
+          </li>
+        {% else %}
+          <li><a href="{% url 'login' %}">Login</a></li>
+          <li><a href="{% url 'register' %}">Register</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+</div>
+
+<main class="main-content">
+  <div class="container">{% block content %}{% endblock %}</div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Hotel Royal Stay</h3>
+        <p>Experience luxury and comfort at our premium hotel. Book your stay today!</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <p>Hitech City, Hyderabad</p>
+        <p>Email: info@hotelroyalstay.com</p>
+        <p>Phone: +91 7777711111</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'room_list' %}">Rooms</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            {% if user.is_staff %}<li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>{% endif %}
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">© {% now "Y" %} Hotel Royal Stay — All rights reserved</div>
+  </div>
+</footer>
+</body>
+</html>
+

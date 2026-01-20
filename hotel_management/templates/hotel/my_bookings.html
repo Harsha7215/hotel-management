@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings | Hotel Royal stay {% endblock %}
+
+{% block content %}
+<h1 class="page-title">My Bookings</h1>
+<p class="page-subtitle">View and manage all your reservations</p>
+
+{% if bookings %}
+    {% for booking in bookings %}
+        <div class="booking-card">
+
+            <!-- Header -->
+            <div class="booking-header">
+                <div>
+                    <span class="booking-id">Booking #{{ booking.id }}</span>
+                    <span class="booking-status status-{{ booking.status }}">
+                        {{ booking.status|title }}
+                    </span>
+                </div>
+                <small>Created: {{ booking.created_at|date:"M d, Y" }}</small>
+            </div>
+
+            <!-- Details -->
+            <div class="booking-details">
+                <p><strong>Room:</strong>
+                    {{ booking.room.room_type.name }}
+                    ({{ booking.room.room_number }})
+                </p>
+                <p><strong>Check-in:</strong> {{ booking.check_in_date }}</p>
+                <p><strong>Check-out:</strong> {{ booking.check_out_date }}</p>
+                <p><strong>Guests:</strong> {{ booking.number_of_guests }}</p>
+                <p><strong>Total:</strong> ₹{{ booking.total_price }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="booking-actions">
+                <a href="{% url 'booking_details' booking.id %}" class="btn">
+                    View Details
+                </a>
+
+                {% if booking.status == "pending" or booking.status == "confirmed" %}
+                    <a href="{% url 'cancel_booking' booking.id %}"
+                       class="btn btn-danger"
+                       onclick="return confirm('Cancel this booking?')">
+                        Cancel
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="text-center">
+        <h3>No bookings found</h3>
+        <p>
+            You haven’t booked any rooms yet.
+            <a href="{% url 'room_list' %}">Browse rooms</a>
+        </p>
+    </div>
+{% endif %}
+
+{% endblock %}

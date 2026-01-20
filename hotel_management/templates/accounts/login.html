@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="form-title">Welcome Back 👋</h1>
+    <p class="text-center mb-2">
+        Login to manage your bookings and profile
+    </p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">
+                <i class="fas fa-user"></i> Username
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <small class="text-danger">
+                    {{ form.username.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">
+                <i class="fas fa-lock"></i> Password
+            </label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <small class="text-danger">
+                    {{ form.password.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- Non-field errors (wrong username/password) -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {{ form.non_field_errors|striptags }}
+            </div>
+        {% endif %}
+
+        <!-- Submit -->
+        <div class="form-actions">
+            <button type="submit" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </div>
+
+        <!-- Register link -->
+        <div class="text-center mt-2">
+            <p>
+                Don’t have an account?
+                <a href="{% url 'register' %}">Create one</a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}
+ 

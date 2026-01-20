@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Book Room | Hotel Paradise{% endblock %}
+
+{% block content %}
+<div class="form-container">
+
+    <h1 class="form-title">Book Room {{ room.room_number }}</h1>
+
+    <!-- Room Summary -->
+    <div class="room-summary">
+        <h3>Room Details</h3>
+        <p><strong>Type:</strong> {{ room.room_type.name }}</p>
+        <p><strong>Price per night:</strong> ${{ room.room_type.price_per_night }}</p>
+        <p><strong>Capacity:</strong> {{ room.room_type.capacity }} guests</p>
+    </div>
+
+    <!-- Form Errors -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">
+        {{ form.non_field_errors|striptags }}
+    </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.check_in_date.id_for_label }}">
+                <i class="fas fa-calendar-plus"></i> Check-in Date
+            </label>
+            {{ form.check_in_date }}
+            {% if form.check_in_date.errors %}
+                <small class="text-danger">
+                    {{ form.check_in_date.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.check_out_date.id_for_label }}">
+                <i class="fas fa-calendar-minus"></i> Check-out Date
+            </label>
+            {{ form.check_out_date }}
+            {% if form.check_out_date.errors %}
+                <small class="text-danger">
+                    {{ form.check_out_date.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.number_of_guests.id_for_label }}">
+                <i class="fas fa-users"></i> Number of Guests
+            </label>
+            {{ form.number_of_guests }}
+            {% if form.number_of_guests.errors %}
+                <small class="text-danger">
+                    {{ form.number_of_guests.errors|striptags }}
+                </small>
+            {% endif %}
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <a href="{% url 'room_detail' room.id %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <button type="submit" class="btn">
+                <i class="fas fa-check"></i> Continue to Payment
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Date Restriction Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date().toISOString().split("T")[0];
+    const checkIn = document.getElementById("id_check_in_date");
+    const checkOut = document.getElementById("id_check_out_date");
+
+    if (checkIn && checkOut) {
+        checkIn.min = today;
+        checkOut.min = today;
+
+        checkIn.addEventListener("change", function () {
+            checkOut.min = this.value;
+        });
+    }
+});
+</script>
+{% endblock %}
